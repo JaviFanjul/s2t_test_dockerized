@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  audio_simulator:
+    build:
+      context: ./virtual_mics_docker
+    container_name: audio_simulator_mics
+    devices:
+      - /dev/snd
+    environment:
+      PULSE_SERVER: unix:/tmp/pulse_socket
+    volumes:
+      - /run/user/1000/pulse/native:/tmp/pulse_socket
+    user: "${UID}:${GID}"
+    stdin_open: true
+    tty: true
+
+  s2t_gpu:
+    build:
+      context: ./s2t_dockerized
+      dockerfile: Dockerfile
+    container_name: s2t-gpu
+    runtime: nvidia
+    environment:
+      NVIDIA_VISIBLE_DEVICES: 0
+      PULSE_SERVER: unix:/tmp/pulse_socket
+      PULSE_COOKIE: /tmp/pulse_cookie
+    devices:
+      - /dev/snd
+    group_add:
+      - audio
+    volumes:
+      - /run/user/1000/pulse/native:/tmp/pulse_socket
+      - /run/user/1000/.config/pulse/cookie:/tmp/pulse_cookie
+      - ./s2t_dockerized/chunks_sp1:/app/chunks_sp1
+      - ./s2t_dockerized/chunks_sp2:/app/chunks_sp2
+      - ./s2t_dockerized/transcription.txt:/app/transcription.txt
+    stdin_open: true
+    tty: true

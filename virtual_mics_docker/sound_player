@@ -1,0 +1,60 @@
+import pyaudio
+import wave
+import threading
+import traceback
+
+# Instancia global única
+p = pyaudio.PyAudio()
+stream_lock = threading.Lock()  # Lock de sincronización
+
+def play_to_virtual_mic(audio_file, output_device_index):
+    try:
+        wf = wave.open(audio_file, 'rb')
+        channels = wf.getnchannels()
+
+        print(f"[INFO] Reproduciendo {audio_file} en dispositivo {output_device_index} con {channels} canales")
+
+        with stream_lock:  # <-- Asegura inicialización secuencial del stream
+            stream = p.open(
+                format=p.get_format_from_width(wf.getsampwidth()),
+                channels=channels,
+                rate=wf.getframerate(),
+                output=True,
+                output_device_index=output_device_index
+            )
+
+        chunk = 1024
+        data = wf.readframes(chunk)
+
+        while data:
+            stream.write(data)
+            data = wf.readframes(chunk)
+
+        stream.stop_stream()
+        stream.close()
+        wf.close()
+
+        print(f"[INFO] Finalizada reproducción en {output_device_index}")
+
+    except Exception as e:
+        print(f"[ERROR] Error reproduciendo {audio_file} en {output_device_index}: {e}")
+        traceback.print_exc()
+
+# IDs correctos de tus dispositivos
+virtual_mic_1 = 20
+virtual_mic_2 = 21
+
+audio1 = "right.wav"
+audio2 = "left.wav"
+
+thread1 = threading.Thread(target=play_to_virtual_mic, args=(audio1, virtual_mic_1))
+thread2 = threading.Thread(target=play_to_virtual_mic, args=(audio2, virtual_mic_2))
+
+thread1.start()
+thread2.start()
+
+thread1.join()
+thread2.join()
+
+# Cerrar PyAudio una sola vez al final
+p.terminate()

@@ -1,0 +1,10 @@
+venv/
+# Ignorar imágenes de Docker y contenedores
+*.tar
+*.img
+
+#Ignorar chunks de transcripciones y manteener los directorios
+chunks_sp1/*
+chunks_sp2/*
+!chunks_sp1/.gitkeep
+!chunks_sp2/.gitkeep
