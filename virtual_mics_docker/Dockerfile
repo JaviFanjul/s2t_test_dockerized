@@ -41,12 +41,13 @@ RUN grep -v "pyaudio" requirements.txt > filtered_requirements.txt
 RUN pip install --no-cache-dir -r filtered_requirements.txt
 
 # Copiar archivos del proyecto
-COPY list_audio_sources.py .
-COPY split_audio.py .
-COPY stereo.wav .
-COPY sound_player .
+COPY src/list_audio_sources.py ./src/
+COPY src/split_audio.py ./src/
+COPY audio/stereo.wav ./audio/
+COPY src/sound_player.py ./src/
 COPY start.sh .
 
 # Hacer ejecutable el script de arranque si lo deseas
-# RUN chmod +x start.sh
-# ENTRYPOINT ["bash", "start.sh"]
+RUN chmod +x start.sh
+ENTRYPOINT ["bash", "start.sh"]
+

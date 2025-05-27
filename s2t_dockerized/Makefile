@@ -29,7 +29,6 @@ run:
 		-v $(PWD)/chunks_sp2:/app/chunks_sp2 \
 		-v $(PWD)/transcription.txt:/app/transcription.txt \
 		$(IMAGE_NAME) \
-		bash
 
 clean:
 	docker rmi $(IMAGE_NAME)

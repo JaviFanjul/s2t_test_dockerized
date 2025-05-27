@@ -52,4 +52,4 @@ COPY run.sh .
 RUN chmod +x run.sh
 
 # CMD comentado por ahora para lanzar con bash en pruebas
-# CMD ["./run.sh"]
+CMD ["./run.sh"]

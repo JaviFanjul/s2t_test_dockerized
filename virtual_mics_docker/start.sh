@@ -38,5 +38,6 @@ else
     pactl load-module module-remap-source master=agent_sink.monitor source_name=agent_mic
 fi
 
-python3 split_audio.py "stereo.wav" "left.wav" "right.wav"
-python3 sound_player
+python3 src/split_audio.py "audio/stereo.wav" "audio/left.wav" "audio/right.wav"
+
+python3 src/sound_player.py

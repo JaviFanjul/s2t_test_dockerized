@@ -97,6 +97,7 @@ class SystemOrchestrator:
 
         for t in self.threads:
             t.start()
+            time.sleep(0.5)
 
         try:
             while all(t.is_alive() for t in self.threads):

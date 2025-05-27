@@ -1,5 +1,6 @@
 import pyaudio
 import os
+from utils import get_device_id_from_name
 
 
 # === Audio stream configuration ===
@@ -13,8 +14,8 @@ POST_BUFFER = 20                  # Number of chunks to store after silence
 MAX_CHUNK_TIME = 10               # Maximum duration of a chunk (seconds)
 
 # === Audio device IDs ===
-ID_DEVICE_sp1 = 22
-ID_DEVICE_sp2 = 23
+ID_DEVICE_sp1 = get_device_id_from_name("Monitor of AgentSink")
+ID_DEVICE_sp2 = get_device_id_from_name("Monitor of ClientSink")
 
 # === Output folders for each speaker ===
 OUTPUT_FOLDER_sp1 = "chunks_sp1"

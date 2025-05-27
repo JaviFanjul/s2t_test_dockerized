@@ -1,6 +1,7 @@
 import os
 import re
 import logging
+import pyaudio
 
 
 # Basic logger configuration
@@ -87,3 +88,18 @@ def extract_time(filename):
         end = match.group(2)
         return f"{start}-{end}"
     return None
+
+def get_device_id_from_name(name_fragment):
+    """
+    Busca el índice del dispositivo de audio cuyo nombre contenga 'name_fragment'.
+    Este código puede usarse dentro de config.py para resolver dinámicamente los IDs.
+    """
+    p = pyaudio.PyAudio()
+    for i in range(p.get_device_count()):
+        info = p.get_device_info_by_index(i)
+        if name_fragment.lower() in info.get("name", "").lower():
+            logging.info(f"Encontrado '{name_fragment}' como dispositivo #{i} ({info['name']})")
+            p.terminate()
+            return i
+    p.terminate()
+    raise ValueError(f"No se encontró un dispositivo que contenga '{name_fragment}'")
